@@ -1,21 +1,85 @@
 ﻿// urok1.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 
+#include <fstream>
 #include <iostream>
 
+void shift_left(int* arr, int n) {
+    int temp = arr[0];
+
+    for (int i = 1; i <= n-1; i++) {
+        arr[i - 1] = arr[i];
+    }
+    arr[n - 1] = temp;
+}
+
+void shift_right(int* arr, int n) {
+    int temp = arr[n-1];
+
+    for (int i = n-1; i >= 0; i--) {
+        arr[i] = arr[i-1];
+    }
+    arr[0] = temp;
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    setlocale(LC_ALL, "Russian");   
+
+    int n,m;
+
+    std::ifstream file("in.txt");
+
+    if (file.is_open()) {
+        std::string s;
+        while (!(file.eof()))
+        {
+            
+            file >> n;
+
+            int* arr_in1 = new int[n];
+
+            for (int i = 0; i < n; i++) {
+                file >> arr_in1[i];
+            }
+
+            file >> m;
+
+            int* arr_in2 = new int[m];
+
+            for (int i = 0; i < m; i++) {
+                file >> arr_in2[i];
+            }
+
+            shift_left(arr_in1, n);
+            shift_right(arr_in2, m);
+
+            std::ofstream fout("out.txt");
+
+            if (fout.is_open()) {
+                fout << m << std::endl;
+
+                for (int i = 0; i < m; i++) {
+                    fout << arr_in2[i] << " ";
+                }
+                fout << std::endl;
+                fout << n << std::endl;
+
+                for (int i = 0; i < n; i++) {
+                    fout << arr_in1[i] << " ";
+                }
+                fout.close();
+            }
+            else {
+                std::cout << "Не получилось открыть файл!" << std::endl;
+            }
+            delete[] arr_in1;
+            delete[] arr_in2;
+        }
+    }
+    else {
+        std::cout << "Не получилось открыть файл!" << std::endl;
+    }
+    file.close();
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
