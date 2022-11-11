@@ -16,7 +16,7 @@ enum months {
 };
 
 void print_month(int number_month) {
-	switch (number_month) {
+	switch (static_cast<months>(number_month)) {
 	case months::january:
 		std::cout << "Январь" << std::endl;
 		break;
