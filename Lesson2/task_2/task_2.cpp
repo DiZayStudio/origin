@@ -1,20 +1,40 @@
-﻿// task_2.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿#include <iostream>
+#include <Windows.h>
 
-#include <iostream>
+struct bank_account {
+	int number;
+	std::string owner_name;
+	double money;
+};
 
-int main()
-{
-    std::cout << "Hello World!\n";
+void change_maney(bank_account& a, double maney) {
+	a.money = maney;
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
+int main()
+{	
+//	setlocale(LC_ALL, "Russian");
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	
+	bank_account account;
+	double money;
 
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
+	std::cout << "Введите номер счёта: ";
+	std::cin >> account.number;
+
+	std::cout << "Введите имя владельца: ";
+	std::cin >> account.owner_name;
+
+	std::cout << "Введите баланс: ";
+	std::cin >> account.money;
+
+	std::cout << "Введите новый баланс: ";
+	std::cin >> money;
+
+	change_maney(account, money);
+
+	std::cout << "Ваш счёт: " << account.owner_name << ", " << account.number << ", " << account.money << std::endl;
+
+}
+
