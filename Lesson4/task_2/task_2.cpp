@@ -26,18 +26,6 @@ public:
     std::string get_sity() {
         return sity;
     }
-    void get_data(std::string* sity, std::string* street, int* house, int* apartment) {
-        *sity = this->sity;
-        *street = this->street;
-        *house = this->house;
-        *apartment = this->apartment;
-    }
-    void set_data(std::string sity, std::string street, int house, int apartment) {
-        this->sity = sity;
-        this->street = street;
-        this->house = house;
-        this->apartment = apartment;
-    }
 };
 
 Address* read_file(std::string name, int* n) {
@@ -87,20 +75,15 @@ void write_file(Address* arr_address, int n) {
 
 void sort_address(Address* arr_address, int n) {
 
-    std::string sity,sity_temp;
-    std::string street,street_temp;
-    int house,house_temp;
-    int apartment,apartment_temp;
-
     bool swapped = false;
     do {
         swapped = false;
         for (int i = 0; i < n - 1; i++) {
-            if (arr_address[i].get_sity()[0] < arr_address[i + 1].get_sity()[0]) {
-                arr_address[i].get_data(&sity, &street, &house, &apartment);
-                arr_address[i + 1].get_data(&sity_temp, &street_temp, &house_temp, &apartment_temp);
-                arr_address[i].set_data(sity_temp, street_temp, house_temp, apartment_temp);
-                arr_address[i + 1].set_data(sity, street, house, apartment);
+            if (arr_address[i].get_sity() < arr_address[i + 1].get_sity()) {
+                
+                Address temp = arr_address[i];
+                arr_address[i] = arr_address[i + 1];    //Спасибо за подсказку. Я упустил это момент, что 
+                arr_address[i + 1] = temp;                 //можно напрямую присваивать обЪекты
                 swapped = true;
             }
         }
