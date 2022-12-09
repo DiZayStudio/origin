@@ -19,24 +19,20 @@ public:
 		else return false;
 	}
 	bool operator != (Fraction num) {
-		if (this->numerator_ * num.denominator_ != num.numerator_ * this->denominator_) return true;
-		else return false;
+		return !(*this == num);
 	}
 	bool operator < (Fraction num) {
 		if (this->numerator_ * num.denominator_ < num.numerator_ * this->denominator_) return true;
 		else return false;
 	}
 	bool operator > (Fraction num) {
-		if (this->numerator_ * num.denominator_ > num.numerator_ * this->denominator_) return true;
-		else return false;
+		return (num < *this);
 	}
 	bool operator <= (Fraction num) {
-		if (this->numerator_ * num.denominator_ <= num.numerator_ * this->denominator_) return true;
-		else return false;
+		return !(*this > num);
 	}
 	bool operator >= (Fraction num) {
-		if (this->numerator_ * num.denominator_ >= num.numerator_ * this->denominator_) return true;
-		else return false;
+		return !(*this < num);
 	}
 
 	std::string get_str() {
@@ -75,37 +71,19 @@ public:
 	}
 
 	Fraction& reduction() {
+		int x = numerator_;
+		int y = denominator_;
 
-		if (numerator_ % 2 == 0 && denominator_ % 2 == 0 && numerator_ > 1 && denominator_ > 1) {
-//			std::cout << "Делится на 2" << std::endl;
-			do {
-				numerator_ = numerator_ / 2;
-				denominator_ = denominator_ / 2;
-			} while (numerator_ % 2 == 0 && denominator_ % 2 == 0 && numerator_ > 1 && denominator_ > 1);
-		}
-		else if (numerator_ % 5 == 0 && denominator_ % 5 == 0 && numerator_ > 4 && denominator_ > 4) {
-//			std::cout << "Делится на 5" << std::endl;
-			do {
-				numerator_ = numerator_ / 5;
-				denominator_ = denominator_ / 5;
-			} while (numerator_ % 5 == 0 && denominator_ % 5 == 0 && numerator_ > 4 && denominator_ > 4);
-		}
-		else if ((numerator_ % 10 + numerator_/10 % 10 ) % 3 == 0 && (denominator_ % 10 + denominator_ / 10 % 10) % 3 == 0 &&
-			numerator_ > 2 && denominator_ > 2){
-//			std::cout << "Делится на 3" << std::endl;
-			do {
-				numerator_ = numerator_ / 3;
-				denominator_ = denominator_ / 3;
-			} while ((numerator_ % 10 + numerator_ / 10 % 10) % 3 == 0 && (denominator_ % 10 + denominator_ / 10 % 10) % 3 == 0 &&
-				numerator_ > 2 && denominator_ > 2);
-
-
-		}
+		do {
+			if (x > y) x = x % y;
+			else y = y % x;
+		} while ((x != 0) && (y != 0));
+		int nod = x + y;
+		numerator_ = numerator_ / nod;
+		denominator_ = denominator_ / nod;
 		return *this;
 	}
 };
-
-
 
 int main()
 {
@@ -130,8 +108,6 @@ int main()
 	std::cin >> denominator;
 
 	Fraction f2(numerator, denominator);
-
-//	f2 = f1.reduction();
 
 	std::cout << f1.get_str() << " + " << f2.get_str() << " = " << (f1 + f2).get_str() << '\n';
 	std::cout << f1.get_str() << " - " << f2.get_str() << " = " << (f1 - f2).get_str() << '\n';

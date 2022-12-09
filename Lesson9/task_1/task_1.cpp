@@ -17,24 +17,20 @@ public:
 		else return false;
 	}
 	bool operator != (Fraction num) {
-		if (this->numerator_ * num.denominator_ != num.numerator_ * this->denominator_) return true;
-		else return false;
+		return !(*this == num);
 	}
 	bool operator < (Fraction num) {
 		if (this->numerator_ * num.denominator_ < num.numerator_ * this->denominator_) return true;
 		else return false;
 	}
 	bool operator > (Fraction num) {
-		if (this->numerator_ * num.denominator_ > num.numerator_ * this->denominator_) return true;
-		else return false;
+		return (num < *this);
 	}
 	bool operator <= (Fraction num) {
-		if (this->numerator_ * num.denominator_ <= num.numerator_ * this->denominator_) return true;
-		else return false;
+		return !(*this > num);
 	}
 	bool operator >= (Fraction num) {
-		if (this->numerator_ * num.denominator_ >= num.numerator_ * this->denominator_) return true;
-		else return false;
+		return !(*this < num);
 	}
 };
 
