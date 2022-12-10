@@ -1,0 +1,3 @@
+cmake_minimum_required(VERSION 3.10)
+project(my_cmake_project)
+add_executable(my_cmake_program task_3.cpp equilateral_triangle.cpp equilateral_triangle.h figure.h figure.cpp isosceles_triangle.h isosceles_triangle.cpp parallelogram.h parallelogram.cpp quadrangle.h quadrangle.cpp rectangl.h rectangl.cpp rhomb.h rhomb.cpp right_triangle.h right_triangle.cpp square.h square.cpp triangle.h triangle.cpp)
