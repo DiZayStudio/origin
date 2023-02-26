@@ -35,9 +35,12 @@ public:
 	}
 
 	int get_element(int n) {
-		if(n < size) return int_arr[n];
+		if(n < curent_ind && n >= 0) return int_arr[n];
 		else throw MissingElement();
 	}
+
+	smart_array(const smart_array&) = delete;
+	smart_array& operator=(const smart_array&) = delete;
 };
 
 int main()

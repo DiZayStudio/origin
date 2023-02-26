@@ -9,6 +9,11 @@ class MissingElement : public std::exception {
 public:
 	const char* what() const override { return "Отсутствует элемент"; }
 };
+class DestinationObjects : public std::exception {
+public:
+	const char* what() const override { return "Присвоение объекта самому себе"; }
+};
+
 
 class smart_array {
 private:
@@ -20,6 +25,16 @@ public:
 	smart_array(int size) {
 		this->size = size;
 		int_arr = new int[size] {};
+	}
+
+	smart_array(const smart_array& other) {
+			this->int_arr = new int[other.size];
+
+			for (int i = 0; i < other.size; i++) {
+				this->int_arr[i] = other.int_arr[i];
+			}
+			this->curent_ind = other.curent_ind;
+			this->size = other.size;
 	}
 
 	~smart_array() {
@@ -40,24 +55,28 @@ public:
 	}
 
 	int get_element(int n) {
-		if (n < size) return int_arr[n];
+		if (n < curent_ind && n >= 0) return int_arr[n];
 		else throw MissingElement();
 	}
 
 	smart_array& operator = (const smart_array& other) {
-		this->size = other.size;
-		
-		if (this->int_arr != nullptr) {
-			delete[] this->int_arr;
-		}
+		if (this != &other) {
 
-		this->int_arr = new int[other.size];
-		
-		for (int i = 0; i < other.size; i++) {
-			this->int_arr[i] = other.int_arr[i];
-		}
+			this->size = other.size;
+
+			delete[] this->int_arr;
+
+			this->int_arr = new int[other.size];
+
+			for (int i = 0; i < other.size; i++) {
+				this->int_arr[i] = other.int_arr[i];
+			}
 			return *this;
+		} else throw DestinationObjects();
 	}
+
+
+
 };
 
 int main()
@@ -77,7 +96,10 @@ int main()
 		
 		arr = new_array;
 
+		smart_array arr2(arr);
+
 		std::cout << arr.get_element(1) << std::endl;
+		std::cout << arr2.get_element(1) << std::endl;
 
 	}
 	catch (const std::exception& ex) {
