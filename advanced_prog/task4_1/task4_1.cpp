@@ -1,6 +1,7 @@
 ﻿#include <iostream>
-#define CATCH_CONFIG_MAIN
-#include "catch2/catch.hpp"
+
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_session.hpp>
 
 
 struct ListNode
@@ -97,30 +98,26 @@ private:
 };
 
 
-TEST_CASE("test list", "[list]") {
+TEST_CASE() {
 
-    RECUIRE(Empty() == true);
+    List l;
 
+    CHECK(l.Empty() == true);
+
+    l.PushFront(1);
+    l.PushBack(2);
+
+    CHECK(l.Empty() == false);
+    CHECK(l.Size() == 2);
+
+    l.Clear();
+
+    CHECK(l.Empty() == true);
+    CHECK(l.Size() == 0);
 }
 
 
-//int main(int argc, char* argv[]) {
-//
-//    list l;
-//
-//    l.pushfront(1);
-//    l.pushback(2);
-//
-//    //  l.popfront();
-//    //  l.popback();
-//    l.empty();
-//
-//    std::cout << l.size() << std::endl;
-//    l.clear();
-//
-//    std::cout << l.size() << std::endl;
-//
-//
-//    return catch::session().run(argc, argv);
-//
-//}
+int main(int argc, char* argv[]) {
+
+     return Catch::Session().run(argc, argv);
+}
