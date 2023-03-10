@@ -1,15 +1,20 @@
 ﻿#include <iostream>
 #include "Windows.h"
 
+class DestinationObjects : public std::exception {
+public:
+    const char* what() const override { return "Присвоение объекта самому себе"; }
+};
+
 template <class T>
 class table {
 private:
-    T rows;
-    T cols;
+    int rows;
+    int cols;
     T** arr;
 
 public:
-    table(T row, T col)
+    table(int row, int col)
     {
         this->rows = row;
         this->cols = col;
@@ -39,6 +44,31 @@ public:
 
     const int Size() {
         return this->rows * this->cols;
+    }
+
+  //  table(const table& t) = delete;
+ //   table& operator=(const table& t) = delete;
+
+    table& operator = (table& t) {
+
+            rows = t.rows;
+            cols = t.cols;
+
+            for (int i = 0; i < rows; i++) {
+                delete[] arr[i];
+            }
+            delete[] arr;
+
+            arr = new T*[t.rows];
+            for (int i = 0; i < rows; i++) {
+                arr[i] = new T[cols];
+            }
+
+            for (int i = 0; i < t.rows; i++) {
+                for (int j = 0; j < t.rows; j++)
+                this->arr[i][j] = t.arr[i][j];
+            }
+            return *this;
     }
 };
 
