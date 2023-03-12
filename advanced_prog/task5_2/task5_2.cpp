@@ -46,30 +46,52 @@ public:
         return this->rows * this->cols;
     }
 
-  //  table(const table& t) = delete;
+ //   table(const table& t) = delete;
  //   table& operator=(const table& t) = delete;
 
-    table& operator = (table& t) {
-
-            rows = t.rows;
-            cols = t.cols;
-
+    table& operator = (const table& t) {
+        if (this != &t) {
             for (int i = 0; i < rows; i++) {
                 delete[] arr[i];
             }
             delete[] arr;
 
-            arr = new T*[t.rows];
+            rows = t.rows;
+            cols = t.cols;
+
+            arr = new T * [t.rows];
             for (int i = 0; i < rows; i++) {
                 arr[i] = new T[cols];
             }
 
             for (int i = 0; i < t.rows; i++) {
                 for (int j = 0; j < t.rows; j++)
-                this->arr[i][j] = t.arr[i][j];
+                    this->arr[i][j] = t.arr[i][j];
             }
             return *this;
+        }
     }
+
+    table (const table& t) {
+            for (int i = 0; i < rows; i++) {
+                delete[] arr[i];
+            }
+            delete[] arr;
+
+            rows = t.rows;
+            cols = t.cols;
+
+            arr = new T * [t.rows];
+            for (int i = 0; i < rows; i++) {
+                arr[i] = new T[cols];
+            }
+
+            for (int i = 0; i < t.rows; i++) {
+                for (int j = 0; j < t.rows; j++)
+                    this->arr[i][j] = t.arr[i][j];
+            }
+     }
+
 };
 
 int main() {
@@ -79,6 +101,9 @@ int main() {
     auto test = table<int>(2, 3);
     test[0][0] = 4;
     std::cout << test[0][0] << std::endl;
+
+    test = test;
+    auto test2 = test;
 
     std::cout << "Размер таблицы: " << test.Size() << std::endl;
 }

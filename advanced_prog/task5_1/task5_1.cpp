@@ -7,15 +7,14 @@ T square(const T a) {
 }
 
 template <class T>
-std::vector <T> square(const std::vector <T> a) {
+std::vector <T> square(std::vector <T> a) {
 
-    std::vector<T> temp(a.size());
-
-    for (auto i = 0; i < temp.size(); i++) {
-        temp[i] = a[i]*a[i] ;
+    for (auto i = 0; i < a.size(); i++) {
+        a[i] = a[i] * a[i];
     }
-    return temp;
+    return a;
 }
+
 
 int main()
 {
