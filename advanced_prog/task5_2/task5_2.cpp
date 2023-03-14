@@ -68,15 +68,11 @@ public:
                 for (int j = 0; j < t.rows; j++)
                     this->arr[i][j] = t.arr[i][j];
             }
-            return *this;
         }
+        return *this;
     }
 
     table (const table& t) {
-            for (int i = 0; i < rows; i++) {
-                delete[] arr[i];
-            }
-            delete[] arr;
 
             rows = t.rows;
             cols = t.cols;
