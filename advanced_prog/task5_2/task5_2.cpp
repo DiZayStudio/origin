@@ -34,11 +34,11 @@ public:
         delete[] arr;
     }
 
-    T* operator[] (T index) {
+    T* operator[] (int index) {
         return arr[index];
     }
 
-    const T* operator[] (T index) const {
+    const T* operator[] (int index) const {
         return arr[index];
     }
 
