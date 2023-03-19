@@ -10,6 +10,8 @@ public:
 	MyPointer(T *ptr) {
 		this->ptr = ptr;
 	};
+	MyPointer() {
+	};
 	~MyPointer() {
 		delete ptr;
 	};
@@ -19,7 +21,9 @@ public:
 	}
 
 	T* release() {
-		return ptr;
+		T* temp = ptr;
+		ptr = nullptr;
+		return temp;
 	}
 
 	MyPointer(const MyPointer& T) = delete;
@@ -42,7 +46,7 @@ int main()
 
 	int* num = pointer.release();
 
-	std::cout << *pointer << std::endl;
+//	std::cout << *pointer << std::endl;
 	std::cout << num << std::endl;
 	std::cout << *num << std::endl;
 }
