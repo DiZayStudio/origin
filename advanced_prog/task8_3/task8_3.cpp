@@ -11,6 +11,7 @@ public:
 		this->ptr = ptr;
 	};
 	MyPointer() {
+		this->ptr = nullptr;
 	};
 	~MyPointer() {
 		delete ptr;
