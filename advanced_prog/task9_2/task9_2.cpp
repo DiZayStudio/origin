@@ -14,7 +14,7 @@ public:
         this->num_ = num;
     }
 
-    big_integer operator + (big_integer other) {
+    big_integer operator + (const big_integer& other) {
         
         int n1 = this->length();
         int n2 = other.length();
@@ -85,23 +85,20 @@ public:
         return *this;
     }
 
-    int length() {
+    int length() const {
         return this->num_.length();
     }
 
-    // конструктор перемещения
     big_integer(const big_integer& other) {
-        if (this != &other) 
-            this->num_ = other.num_;
+         this->num_ = other.num_;
     }
 
-    big_integer(big_integer& other) {
-        this->num_ = other.num_;
+    big_integer(big_integer&& other) noexcept {
+          std::swap(this->num_, other.num_);
     }
 
     // оператор перемещающего присваивания
-    big_integer& operator = (big_integer& other) noexcept
-    {
+    big_integer& operator = (big_integer&& other) noexcept {
         if (this != &other) 
             std::swap(this->num_, other.num_);
         return *this; 
