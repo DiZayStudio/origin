@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\demon\Documents\Visual Studio 2022\netology\sql\task5\build\CMakeFiles\1852cac4c060e31da0c75d71d097f6c7\PACKAGE_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{9A2DA49B-92E1-3526-941E-B8C567354DEB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
