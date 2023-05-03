@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <pqxx/pqxx>
 #include <string>
 #include <Windows.h>
@@ -34,7 +34,7 @@ public:
 
 	void InsertPhone(std::string first_name, std::string last_name, std::string phone) {
 		pqxx::work tx{ *c };
-		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + first_name + "' and last_name = '" + last_name + "'; ");	
+		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + tx.esc(first_name) + "' and last_name = '" + tx.esc(last_name) + "'; ");
 		if (id > 0) {
 			std::string query = "INSERT INTO phones (phone, client_id) VALUES('" + tx.esc(phone) + "', '" + tx.esc(std::to_string(id)) + "')";
 			tx.exec(query);
@@ -42,9 +42,9 @@ public:
 		}
 	};
 
-	void СhangeFirstName(std::string first_name, std::string last_name, std::string NewFirstName) {
+	void ChangeFirstName(std::string first_name, std::string last_name, std::string NewFirstName) {
 		pqxx::work tx{ *c };
-		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + first_name + "' and last_name = '" + last_name + "'; ");
+		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + tx.esc(first_name) + "' and last_name = '" + tx.esc(last_name) + "'; ");
 		if (id > 0) {
 			std::string query = "UPDATE clients SET first_name = '" + tx.esc(NewFirstName) + "' WHERE id = " + std::to_string(id);
 			tx.exec(query);
@@ -52,9 +52,9 @@ public:
 		}
 	}
 
-	void СhangeLastName(std::string first_name, std::string last_name, std::string NewLastName) {
+	void ChangeLastName(std::string first_name, std::string last_name, std::string NewLastName) {
 		pqxx::work tx{ *c };
-		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + first_name + "' and last_name = '" + last_name + "'; ");
+		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + tx.esc(first_name) + "' and last_name = '" + tx.esc(last_name) + "'; ");
 		if (id > 0) {
 			std::string query = "UPDATE clients SET last_name = '" + tx.esc(NewLastName) + "' WHERE id = " + std::to_string(id);
 			tx.exec(query);
@@ -62,9 +62,9 @@ public:
 		}
 	}
 
-	void СhangeE_mail(std::string first_name, std::string last_name, std::string NewE_mail) {
+	void ChangeE_mail(std::string first_name, std::string last_name, std::string NewE_mail) {
 		pqxx::work tx{ *c };
-		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + first_name + "' and last_name = '" + last_name + "'; ");
+		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + tx.esc(first_name) + "' and last_name = '" + tx.esc(last_name) + "'; ");
 		if (id > 0){
 			std::string query = "UPDATE clients SET e_mail = '" + tx.esc(NewE_mail) + "' WHERE id = " + std::to_string(id);
 			tx.exec(query);
@@ -82,7 +82,7 @@ public:
 
 	void DeleteClient(std::string first_name, std::string last_name) {
 		pqxx::work tx{ *c };
-		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + first_name + "' and last_name = '" + last_name + "'; ");
+		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + tx.esc(first_name) + "' and last_name = '" + tx.esc(last_name) + "'; ");
 		if (id > 0) {
 			std::string query = "DELETE FROM phones WHERE client_id = " + std::to_string(id);
 			tx.exec(query);
@@ -97,19 +97,19 @@ public:
 			return { };
 		}
 		pqxx::work tx{ *c };
-		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + first_name + "' and last_name = '" + last_name + "'; ");
+		int id = tx.query_value<int>("SELECT id FROM clients WHERE first_name = '" + tx.esc(first_name) + "' and last_name = '" + tx.esc(last_name) + "'; ");
 		return id;
 	}
 
 	int SerchIDByEmail(std::string e_mail) {
 		pqxx::work tx{ *c };
-		int id = tx.query_value<int>("SELECT id FROM clients WHERE e_mail = '" + e_mail + "'");
+		int id = tx.query_value<int>("SELECT id FROM clients WHERE e_mail = '" + tx.esc(e_mail) + "'");
 		return id;
 	}
 
 	int SerchIDByPhone(std::string phone) {
 		pqxx::work tx{ *c };
-		int id = tx.query_value<int>("SELECT client_id FROM phones WHERE phone = '" + phone + "'");
+		int id = tx.query_value<int>("SELECT client_id FROM phones WHERE phone = '" + tx.esc(phone) + "'");
 		return id;
 	}
 
@@ -117,7 +117,6 @@ protected:
 
 	std::unique_ptr<pqxx::connection> c;
 };
-
 
 int main (){
 	SetConsoleCP(CP_UTF8);
@@ -131,43 +130,35 @@ int main (){
 		db.SetConnection(std::move(c));
 
 		db.CreateTable();
-	
-		// добавить нового клиента
+
+		db.InsertClient("Р’Р°СЃСЏ", "РџСѓРїРєРёРЅ", "d12345@mail.ru");
 		db.InsertClient("Vasya", "Pupkin", "12345@mail.ru");
 		db.InsertClient("Vasya2", "Pupkin2", "134@mail.ru");
 		db.InsertClient("Vasya3", "Pupkin3", "13@mail.ru");
 		db.InsertClient("Vasya4", "Pupkin4", "1@mail.ru");
-	// добавить телефон для существующего клиента
 		db.InsertPhone("Vasya", "Pupkin", "7302-11-23");
 		db.InsertPhone("Vasya", "Pupkin", "7320-22-23");
 		db.InsertPhone("Vasya2", "Pupkin2", "3420-1-23");
 		db.InsertPhone("Vasya4", "Pupkin4", "740-55-23");
 
-	// поиск id клиента по имени 
 		int id = db.SerchIDByName("Vasya", "Pupkin");
 		std::cout << id << std::endl;
-	
-	// поиск id клиента по e_mail 
+	 
 		id = db.SerchIDByEmail("134@mail.ru");
 		std::cout << id << std::endl;
-
-	// поиск id клиента по телефону
+	
 		id = db.SerchIDByPhone("7302-11-23");
 		std::cout << id << std::endl;
 
-	// изменить имя клиентa
-		db.СhangeFirstName("Vasya3", "Pupkin3", "VasyaNew");
-	 
-	// изменить фамилию клиентa
-		db.СhangeLastName("Vasya4", "Pupkin4", "PupkinNew");
-	
-	// изменить e-mail клиентa
-		db.СhangeE_mail("Vasya", "Pupkin", "new@mail.ru");
 
-	// удалить телефон для существующего клиента
+		db.ChangeFirstName("Vasya3", "Pupkin3", "VasyaNew");
+	 
+		db.ChangeLastName("Vasya4", "Pupkin4", "PupkinNew");
+
+		db.ChangeE_mail("Vasya", "Pupkin", "new@mail.ru");
+
 		db.DeletePhone("740-55-23");
 
-	// удалить клиента
 		db.DeleteClient("Vasya", "Pupkin");
 	}
 	catch (pqxx::sql_error e) {
