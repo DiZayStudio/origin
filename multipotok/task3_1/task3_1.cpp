@@ -1,18 +1,48 @@
-﻿// Задание 1
-// «Сортировка выбором»
-// Необходимо реализовать алгоритм сортировки выбором.
-// Сортировка выбором состоит в том, что в неупорядоченном списке находится наименьший элемент.
-// Выбранный в исходном списке минимальный элемент записывается на i - е место исходного списка(i = 1, 2, …, п),
-//  а элемент с i - го места – на место выбранного.При этом очевидно, что уже упорядоченные элементы
-// (а они будут расположены начиная с первого места) исключаются из дальнейшей сортировки, поэтому длина списка,
-//  участвующего в каждом последующем просмотре должна быть на один элемент меньше предыдущего.
-//
-// Поиск минимального элемента реализовать в виде асинхронной задачи.
-// Результат должен возвращаться в основной поток через связку std::promise - std::future.
+﻿#include <iostream>
+#include <vector>
+#include <random>
+#include <Windows.h>
+#include <future>
 
-#include <iostream>
+void serch_min(std::vector<int> v, int i_start, std::promise<int> m_index) {
+    int min = INT_MAX;
+    int index = 0;
+    for (int i = i_start; i < v.size(); i++) {
+        if (v.at(i) < min) {
+            min = v.at(i);
+            index = i;
+        }          
+    }
+    m_index.set_value(index);
+}
 
-int main()
-{
-    std::cout << "Hello World!\n";
+void main() {
+    setlocale(LC_ALL, "Russian");
+    std::vector<int> vec;
+    const long n = 10;
+
+    for (int i = 0; i < n; i++) {
+        vec.push_back(rand());
+    }
+    std::cout << "Массив до сортировки:" << std::endl;
+    for (auto v : vec) std::cout << v << "\t";
+    std::cout << std::endl;
+
+    for (int i = 0; i < vec.size(); i++) {
+        std::promise<int> res_promise;
+        std::future<int> res = res_promise.get_future();
+        auto serch = std::async(serch_min, vec, i, std::move(res_promise));
+        res.wait();
+        int ind_min = res.get();
+        if (i != ind_min) {
+            int tmp = vec.at(i);
+            vec.at(i) = vec.at(ind_min);
+            vec.at(ind_min) = tmp;
+        }
+    }
+
+    std::cout << "Массив после сортировки:" << std::endl;
+    for (auto v : vec)
+    std::cout << v << "\t";
+    std::cout << std::endl;
 }
