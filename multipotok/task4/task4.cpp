@@ -18,8 +18,14 @@
 //Необходимо выделить из кода «плохие запахи» и провести рефакторинг кода, приведя его к корректному виду.
 
 #include <iostream>
+#include"shape.h"
+#include"transform.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+
+ //   Shape sh(0, 0, 0, 10, 10);
+
+
+ //   std::cout << sh.getType() << " - тип фигуры\n";
 }

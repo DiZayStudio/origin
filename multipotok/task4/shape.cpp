@@ -1,116 +1,104 @@
 #define _USE_MATH_DEFINES
 #include"shape.h"
 #include<cmath>
-Shape::Shape(int _type, int _x1, int _y1, int _z1, int _x2, int _y2, int _z2, int _x3, int _y3, int _z3, int _x4, int _y4, int _z4, int _x5, int _y5, int _z5, int _x6, int _y6, int _z6, int _x7, int _y7, int _z7, int _x8, int _y8, int _z8)
-{
-	type = _type;
-	// заполн¤ем координаты фигуры
-	switch (type)
-	{
-	case line:
-		x1 = _x1; y1 = _y1;
-		x2 = _x2; y2 = _y2;
-		break;
-	case sqr:
-		x1 = _x1; y1 = _y1;
-		x2 = _x2; y2 = _y2;
-		x3 = _x3; y3 = _y3;
-		x4 = _x4; y4 = _y4;
-		break;
-	case cube:
-		x1 = _x1; y1 = _y1; z1 = _z1;
-		x2 = _x2; y2 = _y2; z2 = _z2;
-		x3 = _x3; y3 = _y3; z3 = _z3;
-		x4 = _x4; y4 = _y4; z4 = _z4;
-		x5 = _x5; y5 = _y5; z5 = _z5;
-		x6 = _x6; y6 = _y6; z6 = _z6;
-		x7 = _x7; y7 = _y7; z7 = _z7;
-		x8 = _x8; y8 = _y8; z8 = _z8;
-		break;
-	default:
-		break;
-	}
 
-	// стороны фигуры
-	int a = abs(x1 - x2);
-	int b = abs(y1 - y2);
-	int c = abs(z1 - z2);
-	// считаем площадь фигуры
-	switch (type)
-	{
-	case line:
-		square = 0;
-		break;
-	case sqr:
-		square = a * b;
-		break;
-	case cube:
-		square = 2 * a * b + 2 * a * c + 2 * b * c;
-		break;
-	default:
-		break;
-	}
 
-	// считаем объем фигуры
-	switch (type)
-	{
-	case line:
-		volume = 0;
-		break;
-	case sqr:
-		volume = 0;
-		break;
-	case cube:
-		volume = a * b * c;
-		break;
-	default:
-		break;
-	}
 
+// длина отрезка
+int Length(Point a, Point b) {
+	return std::sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
-Shape::Shape(int type, int _x1, int _y1, double R, double H)
-{
-	// заполн¤ем координаты фигуры
-	switch (type)
-	{
-	case circle:
-		x1 = _x1; y1 = _y1;
-		radius = R;
-		break;
-	case cylinder:
-		x1 = _x1; y1 = _y1;
-		radius = R;
-		height = H;
-		break;
-	default:
-		break;
-	}
+Shape::Shape(int type) {
+	this->type = type;
+}
 
-	// считаем площадь фигуры
-	switch (type)
-	{
-	case circle:
-		square = M_PI * R * R;
-		break;
-	case cylinder:
-		square = M_PI * R * R + 2 * R * height;
-		break;
-	default:
-		break;
-	}
+int Shape::getType() { 
+	return type; 
+}
 
-	// считаем объем фигуры
-	switch (type)
-	{
-	case circle:
-		volume = 0;
-		break;
-	case cylinder:
-		volume = M_PI * R * R * height;
-		break;
-	default:
-		break;
-	}
+int Shape::Get_square() {
+	return this->square;
+}
 
+int Shape::Get_volume(){
+	 return this->volume;
+}
+int Shape::Get_square() {
+	return this->square;
+}
+int Shape::Get_height() {
+	return this->height;
+}
+int Shape::Get_radius() {
+	return this->radius;
+}
+
+Line::Line() {
+	this->type = 0;
+	this->p1.x = 0; this->p1.y = 0; this->p1.z = 0;
+	this->p2.x = 0; this->p2.y = 0; this->p2.z = 0;
+}
+
+Line::Line(Point p1, Point p2) {
+	this->type = 0;
+	this->p1 = p1;
+	this->p2 = p2;
+}
+
+
+void Line::shift(int m, int n, int k) {
+
+};
+void scaleX(int a);
+void scaleY(int d);
+void scaleZ(int e);
+void scale(int s);
+
+Square::Square(Point p1, Point p2, Point p3, Point p4) {
+	this->type = 1;
+	this->p1 = p1;
+	this->p2 = p2;
+	this->p3 = p3;
+	this->p4 = p4;
+	// стороны фигуры
+	int a = Length(p1, p2);
+	int b = Length(p2, p3);
+
+	this->square = a * b;
+}
+
+Cube::Cube(Point p1, Point p2, Point p3, Point p4, Point p5, Point p6, Point p7, Point p8) {
+	this->type = 2;
+	this->p1 = p1;
+	this->p2 = p2;
+	this->p3 = p3;
+	this->p4 = p4;
+	this->p5 = p5;
+	this->p6 = p6;
+	this->p7 = p7;
+	this->p8 = p8;
+	// стороны фигуры
+	int a = Length(p1, p2);
+	int b = Length(p2, p3);
+	int c = Length(p4, p5);
+
+	this->square = 2 * a * b + 2 * a * c + 2 * b * c;
+	this->volume = a * b * c;
+}
+
+Circle::Circle(Point center, double r) {
+	this->type = 3;
+	this->center = center;
+	this->radius = r;
+	this->square = M_PI * radius * radius;
+}
+
+Cylinder::Cylinder(Point center, double r, double h) {
+	this->type = 4;
+	this->center = center;
+	this->radius = r;
+	this->height = h;
+	this->square = M_PI * radius * radius + 2 * radius * height;
+	this->volume = M_PI * radius * radius * height
 }
