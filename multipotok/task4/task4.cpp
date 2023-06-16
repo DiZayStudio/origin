@@ -23,9 +23,8 @@
 
 int main()
 {
+    Point p1(0, 1), p2(2,3);
 
- //   Shape sh(0, 0, 0, 10, 10);
+    Line sh(line, p1, p2);
 
-
- //   std::cout << sh.getType() << " - тип фигуры\n";
 }
