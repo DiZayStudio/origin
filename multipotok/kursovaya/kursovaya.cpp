@@ -5,38 +5,42 @@
 #include <mutex>
 #include <queue>
 #include <thread>
-
 #include <Windows.h>
 
 using namespace std::chrono_literals;
 
-void F1() { std::cout << "функция F1" << std::endl; }
-void F2() { std::cout << "функция F2" << std::endl; }
+void F1() {
+    std::cout << "функция F1" << std::endl;
+}
+void F2() {
+    std::cout << "функция F2" << std::endl;
+}
 
-template <class T> class Safe_queue {
+template <class T>
+class Safe_queue {
 protected:
-    //   std::condtional_variables;
+    std::condition_variable cond;
     std::queue<std::function<void()>> work_queue;
     std::mutex m;
 public:
     void push(T func) {
-        std::lock_guard<std::mutex> lock(m);
+        std::unique_lock<std::mutex> lock(m);
         work_queue.push(func);
+        lock.unlock();
+        cond.notify_one();
     };
-    void pop() {
-        std::lock_guard<std::mutex> lock(m);
+    T pop() {
+        std::unique_lock<std::mutex> lock(m);
+        cond.wait(lock);
+        T item = work_queue.front();
         work_queue.pop();
-    };
-    T front() {
-        std::lock_guard<std::mutex> lock(m);
-        T res = work_queue.front();
-        return res;
+        return item;
     };
     bool empty() {
-        std::lock_guard<std::mutex> lock(m);
+        std::unique_lock<std::mutex> lock(m);
         bool b = work_queue.empty();
         return b;
-    }
+    };
 };
 
 class Thread_pool {
@@ -56,6 +60,11 @@ public:
 
     ~Thread_pool() {
         for (size_t i = 0; i < threads.size(); i++) {
+            if (threads[i].joinable()) {
+                threads[i].join();
+            }
+        }
+        for (size_t i = 0; i < threads.size(); i++) {
             threads.pop_back();
         }
     };
@@ -64,22 +73,11 @@ public:
         m2.lock();
         std::cout << "id:" << std::this_thread::get_id() << std::endl;
         m2.unlock();
-        std::function<void()> task;
-        while (!done) {           
-            if (!safe_queue.empty()) {
-                std::this_thread::sleep_for(1s);
-                task = safe_queue.front();
-            
-                m2.lock();
-                task();
-                m2.unlock();
-                safe_queue.pop();
-            }
-            else {
-                std::this_thread::yield();
-                done = true;
-                std::cout << std::this_thread::get_id() <<  " остановился" << std::endl;
-            }
+
+        while (!safe_queue.empty()) {
+            std::function<void()> task;
+            task = safe_queue.pop();
+            task();
         }
     };
 
@@ -89,7 +87,7 @@ public:
 };
 
 void add_function(Thread_pool* thr_pool) {
-    for (size_t i = 0; i < 4; i++) {
+    for (size_t i = 0; i < 5; i++) {
         (*thr_pool).submit(F1);
         (*thr_pool).submit(F2);
         std::this_thread::sleep_for(1s);
@@ -103,14 +101,8 @@ int main() {
     Thread_pool thr_pool;
 
     std::thread th(add_function, &thr_pool);
-    
+
     th.join();
-    
-    for (size_t i = 0; i < thr_pool.threads.size(); i++) {
-        if (thr_pool.threads[i].joinable()) {
-            thr_pool.threads[i].join();
-        }
-    }
 
     return 0;
 }
