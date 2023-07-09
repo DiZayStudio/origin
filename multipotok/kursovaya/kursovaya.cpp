@@ -23,21 +23,19 @@ protected:
     std::queue<std::function<void()>> work_queue;
     std::mutex m;
 public:
-    void push(T func) {
-        std::unique_lock<std::mutex> lock(m);
-        work_queue.push(func);
-        lock.unlock();
+    void push(T new_func) {
+        std::lock_guard<std::mutex> lock(m);
+        work_queue.push(std::move(new_func));
         cond.notify_one();
     };
-    T pop() {
+    void pop(T& value) {
         std::unique_lock<std::mutex> lock(m);
-        cond.wait(lock);
-        T item = work_queue.front();
+        cond.wait(lock, [this] {return !work_queue.empty(); });
+        value = std::move(work_queue.front());
         work_queue.pop();
-        return item;
     };
     bool empty() {
-        std::unique_lock<std::mutex> lock(m);
+        std::lock_guard<std::mutex> lock(m);
         bool b = work_queue.empty();
         return b;
     };
@@ -76,8 +74,9 @@ public:
 
         while (!safe_queue.empty()) {
             std::function<void()> task;
-            task = safe_queue.pop();
+            safe_queue.pop(task);
             task();
+            std::this_thread::sleep_for(1s);
         }
     };
 
